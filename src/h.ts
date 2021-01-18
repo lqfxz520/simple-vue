@@ -95,7 +95,7 @@ function normalizeClass (classValue) {
     return res.trim()
 }
 
-function createTextVNode (text: String) {
+export function createTextVNode (text: String) {
     return {
         _isVnode: false,
         flags: VNodeFlags.TEXT,

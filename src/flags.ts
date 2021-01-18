@@ -9,12 +9,17 @@
 // }
 
 export const ChildrenFlags = {
+    // 未知的children
     UNKNOWN_CHILDREN: 0,
+    // 没有
     NO_CHILDREN: 1,
     SINGLE_VNODE: 1 << 1,
+    // 拥有多个节点，带key
     KEYED_VNODES: 1 << 2,
     NONE_KEYED_VNODES: 1 << 3
 }
+
+ChildrenFlags.MULTIPLE_VNODE = ChildrenFlags.KEYED_VNODES | ChildrenFlags.NONE_KEYED_VNODES
 
 export const VNodeFlags = {
     ELEMENT_HTML: 1,

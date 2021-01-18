@@ -1,11 +1,23 @@
-import { h } from './h'
+import { h, Fragment, Portal } from './h'
 import render from './render'
 
-const elementVNode = h('input', {
-    type: 'checkbox',
-    checked: false,
-    custom: 1,
-    class: 'cls-a'
-})
+const nextVNode = h(
+    'div',
+    null,
+    'xbjpdm'
+)
+class MyClassComponent {
+    render() {
+        return h(
+            'div',
+            null,
+            '看ejfeifjeifjeifjeifj'
+        )
+    }
+}
+const prevVNode = h(
+    MyClassComponent
+)
 
-render(elementVNode, document.getElementById('app'))
+render(prevVNode, document.getElementById('app'))
+render(nextVNode, document.getElementById('app'))
