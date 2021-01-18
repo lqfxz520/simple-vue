@@ -1,6 +1,6 @@
 import { createTextVNode } from './h'
 import { VNodeFlags, ChildrenFlags } from './flags'
-import { patch } from './patch'
+import { patch, patchData } from './patch'
 
 export default function render (vnode: any, container: any) {
     const prevVNode = container.vnode
@@ -39,7 +39,6 @@ export function mount(vnode, container, isSVG?) {
     }
 }
 
-const domPropsRE = /\[A-Z]|^(?:value|checked|selected|muted)$/
 function mountElement(vnode, container, isSVG?) {
     isSVG = isSVG || vnode.flags & VNodeFlags.ELEMENT_SVG
     const el = isSVG
@@ -50,25 +49,7 @@ function mountElement(vnode, container, isSVG?) {
     const data = vnode.data
     if (data) {
         for (let key in data) {
-            switch (key) {
-                case 'style':
-                    for (let k in data.style) {
-                        el.style[k] = data.style[k]
-                    }
-                    break
-                case 'class':
-                    el.className = data[key]
-                    break
-                default:
-                    if (key[0] === 'o' && key[1] === 'n') {
-                        el.addEventListener(key.slice(2), data[key])
-                    }else if (domPropsRE.test(key)) {
-                        el[key] = data[key]
-                    } else {
-                        el.setAttribute(key, data[key])
-                    }
-                    break
-            }
+            patchData(el, key, null, data[key])
         }
     }
 
