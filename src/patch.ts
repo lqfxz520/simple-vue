@@ -1,4 +1,4 @@
-import { VNodeFlags } from './flags'
+import { ChildrenFlags, VNodeFlags } from './flags'
 import { mount } from './render'
 
 const domPropsRE = /\W|^(?:value|checked|selected|muted)$/
@@ -12,6 +12,7 @@ export function patch(prevVNode, nextVNode, container) {
     } else if (nextFlags & VNodeFlags.ELEMENT) {
         patchElement(prevVNode, nextVNode, container)
     }
+
 }
 
 function patchElement(prevVNode: VNode, nextVNode: VNode, container) {
@@ -39,6 +40,13 @@ function patchElement(prevVNode: VNode, nextVNode: VNode, container) {
                 }
             }
         }
+        patchChildren(
+            prevVNode.childFlags,
+            nextVNode.childFlags,
+            prevVNode.children,
+            nextVNode.children,
+            el
+        )
     }
 }
 
@@ -81,3 +89,82 @@ export function patchData(el, key, prevValue, nextValue) {
             break
     }
 }
+
+function patchChildren(
+    prevChildFlags,
+    nextChildFlags,
+    prevChildren,
+    nextChildren,
+    container
+) {
+    switch (prevChildFlags) {
+        // 旧的 children 中有单个子节点时，执行该 case 语句块
+        case ChildrenFlags.SINGLE_VNODE:
+            switch (nextChildFlags) {
+                case ChildrenFlags.SINGLE_VNODE:
+                    // 新的标签也是个单子节点时，执行该 case 语句块
+                    patch(prevChildren, nextChildren, container)
+                    break
+                case ChildrenFlags.NO_CHILDREN:
+                    // 新的标签没有子节点时，执行该 case 语句块
+                    container.removeChild(prevChildren.el)
+                    break
+                default:
+                    // 新的标签是个多子节点时，执行该 case 语句块
+                    container.removeChild(prevChildren.el)
+                    for (let i = 0; i < nextChildren.length; i++) {
+                        mount(nextChildren[i], container)
+                    }
+                    break
+            }
+            break
+        // 旧的 children 中没有子节点时，执行该 case 语句块
+        case ChildrenFlags.NO_CHILDREN:
+            switch (nextChildFlags) {
+                case ChildrenFlags.SINGLE_VNODE:
+                    // 新的标签也是个单子节点时，执行该 case 语句块
+                    mount(nextChildren, container)
+                    break
+                case ChildrenFlags.NO_CHILDREN:
+                    // 新的标签没有子节点时，执行该 case 语句块
+                    break
+                default:
+                    // 新的标签是个多子节点时，执行该 case 语句块
+                    for (let i = 0; i < nextChildren.length; i++) {
+                        mount(nextChildren[i], container)
+                    }
+                    break
+            }
+            break
+        // 旧的 children 中有多个子节点时，执行该 case 语句块
+        default:
+            switch (nextChildFlags) {
+                case ChildrenFlags.SINGLE_VNODE:
+                    // 新的标签也是个单子节点时，执行该 case 语句块
+                    for (let i = 0; i < prevChildren.length; i++) {
+                        container.removeChild(prevChildren[i].el)
+                    }
+                    mount(nextChildren, container)
+                    break
+                case ChildrenFlags.NO_CHILDREN:
+                    // 新的标签没有子节点时，执行该 case 语句块
+                    for (let i = 0; i < prevChildren.length; i++) {
+                        container.removeChild(prevChildren[i].el)
+                    }
+                    break
+                default:
+                    // 新的标签是个多子节点时，执行该 case 语句块
+                    // 遍历旧的子节点，将其全部移除
+                    for (let i = 0; i < prevChildren.length; i++) {
+                        container.removeChild(prevChildren[i].el)
+                    }
+                    // 遍历新的子节点，将其全部添加
+                    for (let i = 0; i < nextChildren.length; i++) {
+                        mount(nextChildren[i], container)
+                    }
+                break
+            }
+            break
+    }
+}
+

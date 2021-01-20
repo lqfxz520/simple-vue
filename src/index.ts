@@ -18,6 +18,7 @@ const prevVNode = h(
         },
         custom: 1
     },
+    [h('span', null, '1')]
 )
 
 const nextVNode = h(
@@ -33,9 +34,12 @@ const nextVNode = h(
             aaa: true,
             bbb: false
         }
-    }
+    },
+    [h('span', null,  '2'),h('span', null,  '2')]
 )
 
 render(prevVNode, document.getElementById('app'))
-render(nextVNode, document.getElementById('app'))
+setTimeout(() => {
+    render(nextVNode, document.getElementById('app'))
+}, 2000)
 
