@@ -11,8 +11,65 @@ export function patch(prevVNode, nextVNode, container) {
         replaceVNode(prevVNode, nextVNode, container)
     } else if (nextFlags & VNodeFlags.ELEMENT) {
         patchElement(prevVNode, nextVNode, container)
+    } else if (nextFlags & VNodeFlags.TEXT) {
+        patchText(prevVNode, nextVNode, container)
+    } else if (nextFlags & VNodeFlags.FRAGMENT) {
+        patchFragment(prevVNode, nextVNode, container)
+    } else if (nextFlags & VNodeFlags.PORTAL) {
+        patchPortal(prevVNode, nextVNode, container)
+    }
+}
+
+function patchPortal(prevVNode: VNode, nextVNode: VNode, container) {
+    const tag = document.querySelector(prevVNode.tag)
+    patchChildren(
+        prevVNode.childFlags,
+        nextVNode.childFlags,
+        prevVNode.children,
+        nextVNode.children,
+        tag
+    )
+
+    nextVNode.el = prevVNode.el
+
+    // 如果容器不同，才需要搬运
+    if (prevVNode.tag !== nextVNode.tag) {
+        const container =
+            typeof nextVNode.tag === 'string'
+                ? document.querySelector(nextVNode.tag)
+                : nextVNode.tag
+
+        switch (nextVNode.childFlags) {
+            case ChildrenFlags.SINGLE_VNODE:
+                container.appendChild(nextVNode.children.el)
+                break
+            case ChildrenFlags.NO_CHILDREN:
+                break
+            default:
+                for (let i = 0; i < nextVNode.children.length; i++) {
+                    container.appendChild(nextVNode.children[i].el)
+                }
+                break
+        }
     }
 
+}
+
+function patchFragment(prevVNode: VNode, nextVNode: VNode, container) {
+    patchChildren(
+        prevVNode.childFlags,
+        nextVNode.childFlags,
+        prevVNode.children,
+        nextVNode.children,
+        container
+    )
+}
+
+function patchText(prevVNode: VNode, nextVNode: VNode, container) {
+    const el = (nextVNode.el = prevVNode.el)
+    if (nextVNode.children !== prevVNode.children) {
+        el.nodeValue = nextVNode.children
+    }
 }
 
 function patchElement(prevVNode: VNode, nextVNode: VNode, container) {
@@ -155,6 +212,7 @@ function patchChildren(
                 default:
                     // 新的标签是个多子节点时，执行该 case 语句块
                     // 遍历旧的子节点，将其全部移除
+                    console.log(container)
                     for (let i = 0; i < prevChildren.length; i++) {
                         container.removeChild(prevChildren[i].el)
                     }
@@ -162,9 +220,8 @@ function patchChildren(
                     for (let i = 0; i < nextChildren.length; i++) {
                         mount(nextChildren[i], container)
                     }
-                break
+                    break
             }
             break
     }
 }
-

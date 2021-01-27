@@ -2,40 +2,25 @@ import { h, Fragment, Portal } from './h'
 import render from './render'
 
 const prevVNode = h(
-    'div',
+    Portal,
     {
-        style: {
-            width: '100px',
-            height: '100px',
-            background: 'red',
-        },
-        class: {
-            aaa: false,
-            bbb: true,
-        },
-        onclick () {
-            console.log(34)
-        },
-        custom: 1
+        target: '#portal-box'
     },
-    [h('span', null, '1')]
+    [
+        h('p', null, 'old node 1'),
+        h('p', null, 'old node 2'),
+    ]
 )
 
 const nextVNode = h(
-    'div',
+    Portal,
     {
-        style: {
-            width: '100px',
-            height: '100px',
-            background: 'black',
-            borderRadius: '10px',
-        },
-        class: {
-            aaa: true,
-            bbb: false
-        }
+        target: '#portal-box-1'
     },
-    [h('span', null,  '2'),h('span', null,  '2')]
+    [
+        h('p', null, 'new node 1'),
+        h('p', null, 'new node 2')
+    ]
 )
 
 render(prevVNode, document.getElementById('app'))
