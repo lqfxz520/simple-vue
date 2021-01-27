@@ -17,7 +17,13 @@ export function patch(prevVNode, nextVNode, container) {
         patchFragment(prevVNode, nextVNode, container)
     } else if (nextFlags & VNodeFlags.PORTAL) {
         patchPortal(prevVNode, nextVNode, container)
+    } else {
+        patchComponent(prevVNode, nextVNode, container)
     }
+}
+
+function patchComponent(prevVNode: VNode, nextVNode: VNode, container) {
+
 }
 
 function patchPortal(prevVNode: VNode, nextVNode: VNode, container) {

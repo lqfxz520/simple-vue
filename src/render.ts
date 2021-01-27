@@ -128,12 +128,19 @@ function mountComponent(vnode, container, isSVG?) {
 function mountStatefulComponent(vnode, container, isSVG) {
     // create instance
     const instance = new vnode.tag()
-    // render VNode
-    instance.$vnode = instance.render()
-    // mount
-    mount(instance.$vnode, container, isSVG)
-    // el 属性值 和 组件实例的 $el 属性都引用组件的根元素
-    instance.$el = vnode.el = instance.$vnode.el
+
+    instance._update = function () {
+        // render VNode
+        instance.$vnode = instance.render()
+        // mount
+        mount(instance.$vnode, container, isSVG)
+        // el 属性值 和 组件实例的 $el 属性都引用组件的根元素
+        instance.$el = vnode.el = instance.$vnode.el
+
+        instance.mounted && instance.mounted()
+    }
+
+    instance._update()
 }
 
 function mountFunctionalComponent(vnode, container, isSVG) {
