@@ -17,13 +17,18 @@ export function patch(prevVNode, nextVNode, container) {
         patchFragment(prevVNode, nextVNode, container)
     } else if (nextFlags & VNodeFlags.PORTAL) {
         patchPortal(prevVNode, nextVNode, container)
-    } else {
+    } else if (nextFlags & VNodeFlags.COMPONENT) {
         patchComponent(prevVNode, nextVNode, container)
     }
 }
 
 function patchComponent(prevVNode: VNode, nextVNode: VNode, container) {
+    if (nextVNode.flags & VNodeFlags.COMPONENT_STATEFUL_NORMAL) {
+        const instance = (nextVNode.children = prevVNode.children)
+        instance.$prop = nextVNode.data
 
+        instance._update()
+    }
 }
 
 function patchPortal(prevVNode: VNode, nextVNode: VNode, container) {

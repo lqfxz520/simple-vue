@@ -127,17 +127,31 @@ function mountComponent(vnode, container, isSVG?) {
 
 function mountStatefulComponent(vnode, container, isSVG) {
     // create instance
-    const instance = new vnode.tag()
+    const instance = (vnode.children = new vnode.tag())
 
+    instance.$prop = vnode.data
     instance._update = function () {
-        // render VNode
-        instance.$vnode = instance.render()
-        // mount
-        mount(instance.$vnode, container, isSVG)
-        // el 属性值 和 组件实例的 $el 属性都引用组件的根元素
-        instance.$el = vnode.el = instance.$vnode.el
+        if (instance._mounted) {
+            const prevVNode = instance.$vnode
+            const nextVNode = (instance.$vnode = instance.render())
 
-        instance.mounted && instance.mounted()
+            patch(prevVNode, nextVNode, container)
+            // el 属性值 和 组件实例的 $el 属性都引用组件的根元素
+            instance.$el = vnode.el = instance.$vnode.el
+
+        } else {
+            // render VNode
+            instance.$vnode = instance.render()
+            // mount
+            mount(instance.$vnode, container, isSVG)
+            // el 属性值 和 组件实例的 $el 属性都引用组件的根元素
+            instance.$el = vnode.el = instance.$vnode.el
+
+            instance._mounted = true
+
+            instance.mounted && instance.mounted()
+        }
+
     }
 
     instance._update()

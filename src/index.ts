@@ -1,30 +1,36 @@
 import { h, Fragment, Portal } from './h'
 import render from './render'
 
-const prevVNode = h(
-    Portal,
-    {
-        target: '#portal-box'
-    },
-    [
-        h('p', null, 'old node 1'),
-        h('p', null, 'old node 2'),
-    ]
-)
+class Component1 {
+    render() {
+        return h('span', null, 'component1')
+    }
+}
 
-const nextVNode = h(
-    Portal,
-    {
-        target: '#portal-box-1'
-    },
-    [
-        h('p', null, 'new node 1'),
-        h('p', null, 'new node 2')
-    ]
-)
+class Component2 {
+    render() {
+        return h('span', null, 'component2')
+    }
+}
 
-render(prevVNode, document.getElementById('app'))
-setTimeout(() => {
-    render(nextVNode, document.getElementById('app'))
-}, 2000)
+class MyComponent {
+    isTrue = true
+
+    mounted() {
+        setTimeout(() => {
+            this.isTrue = false
+            this._update()
+        }, 2000)
+    }
+
+    render() {
+        const vnode = this.isTrue ? h(Component1, {}) : h(Component2, {})
+        console.log(vnode)
+        return vnode
+    }
+}
+
+const com = h(MyComponent)
+
+render(com, document.getElementById('app'))
 
