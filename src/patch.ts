@@ -23,11 +23,21 @@ export function patch(prevVNode, nextVNode, container) {
 }
 
 function patchComponent(prevVNode: VNode, nextVNode: VNode, container) {
-    if (nextVNode.flags & VNodeFlags.COMPONENT_STATEFUL_NORMAL) {
+    if (nextVNode.tag !== prevVNode.tag) {
+        replaceVNode(prevVNode, nextVNode, container)
+    } else if (nextVNode.flags & VNodeFlags.COMPONENT_STATEFUL_NORMAL) {
         const instance = (nextVNode.children = prevVNode.children)
         instance.$prop = nextVNode.data
 
         instance._update()
+    } else {
+        const handle = (nextVNode.handle = prevVNode.handle)
+
+        handle.prev = prevVNode
+        handle.next = nextVNode
+        handle.container = container
+
+        handle.update()
     }
 }
 
@@ -63,7 +73,6 @@ function patchPortal(prevVNode: VNode, nextVNode: VNode, container) {
                 break
         }
     }
-
 }
 
 function patchFragment(prevVNode: VNode, nextVNode: VNode, container) {
@@ -122,6 +131,12 @@ function replaceVNode(prevVNode: VNode, nextVNode: VNode, container) {
     // todo...
     // 将旧的VNode所渲染的dom从容器中移除
     container.removeChild(prevVNode.el)
+
+    if (prevVNode.flags & VNodeFlags.COMPONENT_STATEFUL_NORMAL) {
+        const instance = prevVNode.children
+        instance.unmounted && instance.unmounted()
+    }
+
     mount(nextVNode, container)
 }
 

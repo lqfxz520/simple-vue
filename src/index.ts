@@ -1,32 +1,24 @@
 import { h, Fragment, Portal } from './h'
 import render from './render'
 
-class Component1 {
-    render() {
-        return h('span', null, 'component1')
-    }
-}
-
-class Component2 {
-    render() {
-        return h('span', null, 'component2')
-    }
+function MyFunctionComp(props) {
+    return h('div', null, props.text)
 }
 
 class MyComponent {
-    isTrue = true
+    localState = 'one'
 
     mounted() {
         setTimeout(() => {
-            this.isTrue = false
+            this.localState = 'two'
             this._update()
         }, 2000)
     }
 
     render() {
-        const vnode = this.isTrue ? h(Component1, {}) : h(Component2, {})
-        console.log(vnode)
-        return vnode
+        return h(MyFunctionComp, {
+            text: this.localState
+        })
     }
 }
 

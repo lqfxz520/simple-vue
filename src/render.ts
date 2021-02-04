@@ -158,8 +158,35 @@ function mountStatefulComponent(vnode, container, isSVG) {
 }
 
 function mountFunctionalComponent(vnode, container, isSVG) {
-    const $vnode = vnode.tag()
-    mount($vnode, container, isSVG)
-    vnode.el = $vnode.el
+    //
+    vnode.handle = {
+        prev: null,
+        next: vnode,
+        container,
+        update: () => {
+            if (vnode.handle.prev) {
+                // 更新的逻辑写在这里
+                const prevVNode = vnode.handle.prev
+                const nextVNode = vnode.handle.next
+
+                const prevTree = prevVNode.children
+                const props = nextVNode.data
+
+                const nextTree = (nextVNode.children = nextVNode.tag(props))
+                patch(prevTree, nextTree, vnode.handle.container)
+            } else {
+                const props = vnode.data
+
+                // 获取vnode
+                const $vnode = (vnode.children = vnode.tag(props))
+
+                mount($vnode, container, isSVG)
+
+                vnode.el = $vnode.el
+            }
+        }
+    }
+
+    vnode.handle.update()
 }
 

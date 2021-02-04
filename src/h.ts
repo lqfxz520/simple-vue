@@ -20,13 +20,13 @@ export function h (tag: any, data = null, children: null | String = null) {
         // vue2
         if (tag !== null && typeof tag === 'object') {
             flags = tag.functional
-                ? VNodeFlags.COMPOENT_FUNCTIONAL
+                ? VNodeFlags.COMPONENT_FUNCTIONAL
                 : VNodeFlags.COMPONENT_STATEFUL_NORMAL
         } else if (typeof tag === 'function') {
             // vue3
             flags = tag.prototype && tag.prototype.render
                 ? VNodeFlags.COMPONENT_STATEFUL_NORMAL
-                : VNodeFlags.COMPOENT_FUNCTIONAL
+                : VNodeFlags.COMPONENT_FUNCTIONAL
         }
     }
 
@@ -63,6 +63,7 @@ export function h (tag: any, data = null, children: null | String = null) {
         childFlags,
         el: null
     }
+
 }
 
 function normalizeVNodes (children: Array<VNode>) {
