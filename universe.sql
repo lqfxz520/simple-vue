@@ -101,7 +101,8 @@ CREATE TABLE public.moon (
     moon_id integer NOT NULL,
     name character varying(20) NOT NULL,
     age_in_millions_of_years integer,
-    planet_id integer
+    planet_id integer,
+    distance_from_earth integer
 );
 
 
@@ -137,7 +138,8 @@ CREATE TABLE public.planet (
     planet_id integer NOT NULL,
     name character varying(20) NOT NULL,
     has_life boolean,
-    star_id integer
+    star_id integer,
+    planet_types integer
 );
 
 
@@ -173,7 +175,8 @@ CREATE TABLE public.star (
     star_id integer NOT NULL,
     name character varying(20) NOT NULL,
     description text,
-    galaxy_id integer
+    galaxy_id integer,
+    star_types integer
 );
 
 
@@ -254,56 +257,56 @@ INSERT INTO public.galaxy VALUES (6, 'Virgo', 1610, 2.000, true);
 -- Data for Name: moon; Type: TABLE DATA; Schema: public; Owner: freecodecamp
 --
 
-INSERT INTO public.moon VALUES (1, 'Moon', 5, 1);
-INSERT INTO public.moon VALUES (2, 'Phobos', 5, 1);
-INSERT INTO public.moon VALUES (3, 'Deimos', 5, 1);
-INSERT INTO public.moon VALUES (4, 'Olympus Mons', 5, 2);
-INSERT INTO public.moon VALUES (5, 'Titan', 5, 3);
-INSERT INTO public.moon VALUES (6, 'Charon', 5, 4);
-INSERT INTO public.moon VALUES (7, 'Ganymede', 5, 5);
-INSERT INTO public.moon VALUES (8, 'Callisto', 5, 6);
-INSERT INTO public.moon VALUES (9, 'Io', 5, 7);
-INSERT INTO public.moon VALUES (10, 'Europa', 5, 8);
-INSERT INTO public.moon VALUES (11, 'Enceladus', 5, 9);
-INSERT INTO public.moon VALUES (12, 'Mimas', 5, 10);
-INSERT INTO public.moon VALUES (13, 'Tethys', 5, 11);
-INSERT INTO public.moon VALUES (14, 'Dione', 5, 12);
-INSERT INTO public.moon VALUES (15, 'Eros', 5, 1);
-INSERT INTO public.moon VALUES (16, 'Fobos', 5, 2);
-INSERT INTO public.moon VALUES (17, 'Ariel', 5, 3);
-INSERT INTO public.moon VALUES (18, 'Umbriel', 5, 4);
-INSERT INTO public.moon VALUES (19, 'Titania', 5, 5);
-INSERT INTO public.moon VALUES (20, 'Oberon', 5, 6);
+INSERT INTO public.moon VALUES (1, 'Moon', 5, 1, NULL);
+INSERT INTO public.moon VALUES (2, 'Phobos', 5, 1, NULL);
+INSERT INTO public.moon VALUES (3, 'Deimos', 5, 1, NULL);
+INSERT INTO public.moon VALUES (4, 'Olympus Mons', 5, 2, NULL);
+INSERT INTO public.moon VALUES (5, 'Titan', 5, 3, NULL);
+INSERT INTO public.moon VALUES (6, 'Charon', 5, 4, NULL);
+INSERT INTO public.moon VALUES (7, 'Ganymede', 5, 5, NULL);
+INSERT INTO public.moon VALUES (8, 'Callisto', 5, 6, NULL);
+INSERT INTO public.moon VALUES (9, 'Io', 5, 7, NULL);
+INSERT INTO public.moon VALUES (10, 'Europa', 5, 8, NULL);
+INSERT INTO public.moon VALUES (11, 'Enceladus', 5, 9, NULL);
+INSERT INTO public.moon VALUES (12, 'Mimas', 5, 10, NULL);
+INSERT INTO public.moon VALUES (13, 'Tethys', 5, 11, NULL);
+INSERT INTO public.moon VALUES (14, 'Dione', 5, 12, NULL);
+INSERT INTO public.moon VALUES (15, 'Eros', 5, 1, NULL);
+INSERT INTO public.moon VALUES (16, 'Fobos', 5, 2, NULL);
+INSERT INTO public.moon VALUES (17, 'Ariel', 5, 3, NULL);
+INSERT INTO public.moon VALUES (18, 'Umbriel', 5, 4, NULL);
+INSERT INTO public.moon VALUES (19, 'Titania', 5, 5, NULL);
+INSERT INTO public.moon VALUES (20, 'Oberon', 5, 6, NULL);
 
 
 --
 -- Data for Name: planet; Type: TABLE DATA; Schema: public; Owner: freecodecamp
 --
 
-INSERT INTO public.planet VALUES (1, 'Earth', true, 1);
-INSERT INTO public.planet VALUES (2, 'Mars', false, 1);
-INSERT INTO public.planet VALUES (3, 'Proxima b', false, 2);
-INSERT INTO public.planet VALUES (4, 'Vega b', false, 3);
-INSERT INTO public.planet VALUES (5, 'NGC 253 b', false, 4);
-INSERT INTO public.planet VALUES (6, 'Kepler-22b', false, 5);
-INSERT INTO public.planet VALUES (7, 'GJ 876 b', false, 6);
-INSERT INTO public.planet VALUES (8, 'Venus', false, 1);
-INSERT INTO public.planet VALUES (9, 'Mercury', false, 1);
-INSERT INTO public.planet VALUES (10, 'Algol b', false, 3);
-INSERT INTO public.planet VALUES (11, 'NGC 253 c', false, 4);
-INSERT INTO public.planet VALUES (12, 'M87 b', false, 6);
+INSERT INTO public.planet VALUES (1, 'Earth', true, 1, NULL);
+INSERT INTO public.planet VALUES (2, 'Mars', false, 1, NULL);
+INSERT INTO public.planet VALUES (3, 'Proxima b', false, 2, NULL);
+INSERT INTO public.planet VALUES (4, 'Vega b', false, 3, NULL);
+INSERT INTO public.planet VALUES (5, 'NGC 253 b', false, 4, NULL);
+INSERT INTO public.planet VALUES (6, 'Kepler-22b', false, 5, NULL);
+INSERT INTO public.planet VALUES (7, 'GJ 876 b', false, 6, NULL);
+INSERT INTO public.planet VALUES (8, 'Venus', false, 1, NULL);
+INSERT INTO public.planet VALUES (9, 'Mercury', false, 1, NULL);
+INSERT INTO public.planet VALUES (10, 'Algol b', false, 3, NULL);
+INSERT INTO public.planet VALUES (11, 'NGC 253 c', false, 4, NULL);
+INSERT INTO public.planet VALUES (12, 'M87 b', false, 6, NULL);
 
 
 --
 -- Data for Name: star; Type: TABLE DATA; Schema: public; Owner: freecodecamp
 --
 
-INSERT INTO public.star VALUES (1, 'Sun', 'The star at the center of the Solar System.', 1);
-INSERT INTO public.star VALUES (2, 'Proxima Centauri', 'Nearest known star to the Sun.', 1);
-INSERT INTO public.star VALUES (3, 'Algol', 'A binary star system.', 2);
-INSERT INTO public.star VALUES (4, 'Betelgeuse', 'A red supergiant star.', 3);
-INSERT INTO public.star VALUES (5, 'NGC 253', 'A barred spiral galaxy.', 4);
-INSERT INTO public.star VALUES (6, 'M87', 'The most massive known galaxy in the local universe.', 6);
+INSERT INTO public.star VALUES (1, 'Sun', 'The star at the center of the Solar System.', 1, NULL);
+INSERT INTO public.star VALUES (2, 'Proxima Centauri', 'Nearest known star to the Sun.', 1, NULL);
+INSERT INTO public.star VALUES (3, 'Algol', 'A binary star system.', 2, NULL);
+INSERT INTO public.star VALUES (4, 'Betelgeuse', 'A red supergiant star.', 3, NULL);
+INSERT INTO public.star VALUES (5, 'NGC 253', 'A barred spiral galaxy.', 4, NULL);
+INSERT INTO public.star VALUES (6, 'M87', 'The most massive known galaxy in the local universe.', 6, NULL);
 
 
 --
@@ -332,6 +335,14 @@ SELECT pg_catalog.setval('public.planet_planet_id_seq', 1, false);
 --
 
 SELECT pg_catalog.setval('public.star_start_id_seq', 1, false);
+
+
+--
+-- Name: favorite favorite_name_key; Type: CONSTRAINT; Schema: public; Owner: freecodecamp
+--
+
+ALTER TABLE ONLY public.favorite
+    ADD CONSTRAINT favorite_name_key UNIQUE (name);
 
 
 --
